@@ -1,7 +1,9 @@
 extends Control
 
-@onready var cef_node = $GdCEF 
-@onready var display = $TextureRect 
+@onready var cef_node = $GdCEF
+@onready var text_edit: TextEdit = $TextureRect/MarginContainer/HSplitContainer/VSplitContainer/HSplitContainer/TextEdit
+@onready var texture_rect: TextureRect = $TextureRect/MarginContainer/HSplitContainer/VSplitContainer/TextureRect
+
 
 var browser: GdBrowserView
 
@@ -17,7 +19,7 @@ func _ready():
 		return
 
 	# Create browser
-	browser = cef_node.create_browser(google, display, {})
+	browser = cef_node.create_browser(google, texture_rect, {})
 
 func _on_texture_rect_gui_input(event: InputEvent) -> void:
 	if event is InputEventMouseMotion:
@@ -52,3 +54,20 @@ func _input(event):
 			event.alt_pressed, 
 			event.ctrl_pressed
 		)
+
+
+func _on_texture_rect_resized() -> void:
+	if texture_rect:
+		browser.resize(texture_rect.size)
+		pass
+	else:
+		print("Rect has not loaded yet")
+
+func _on_text_edit_text_set() -> void:
+	browser.load_url(text_edit.text) # Replace with function body.
+
+func _on_text_edit_text_changed() -> void:
+	browser.load_url(text_edit.text) # Replace with function body.
+
+func _on_texture_button_pressed() -> void:
+	browser.reload()
